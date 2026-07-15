@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARDM · Admin Dashboard & ID Print</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts exactly as requested -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       USER'S EXACT ID CARD CSS (SCOPED)
+       ========================================= */
+    :root {
+      /* Refined Ultra Premium Palette */
+      --primary: #0B192C;       /* Ultra Deep Navy */
+      --secondary: #1A365D;     /* Rich Elegant Blue */
+      --accent: #D4AF37;        /* Metallic Gold */
+      --accent-light: #FBECA1;  /* Soft Gold */
+      --text-main: #0F172A;     /* Dark Slate */
+      --text-light: #64748B;    /* Medium Slate */
+      --bg-color: #F8FAFC;      /* Clean White/Gray */
+      --white: #FFFFFF;
+      --danger: #E11D48;
+      
+      --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    }
+
+    .id-card-container {
+      font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    /* CR80 CARD DIMENSIONS & BASE */
+    .id-card {
+      width: 2.125in;
+      height: 3.375in;
+      background: var(--white);
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+      z-index: 1;
+      flex: 0 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* Beautiful Subtle Dot Texture */
+    .id-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--secondary) 0.5px, transparent 0.5px);
+      background-size: 12px 12px;
+      opacity: 0.04;
+      z-index: -2;
+    }
+
+    /* FRONT SIDE DESIGN */
+    .id-card .header-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      height: 125px;
+      background: linear-gradient(145deg, var(--primary) 0%, var(--secondary) 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 78%, 0% 100%);
+      z-index: 0;
+    }
+
+    .id-card .header-bg::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; width: 100%; height: 4px;
+      background: var(--gold-gradient);
+    }
+
+    .id-card .header-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding-top: 15px;
+      color: var(--white);
+    }
+
+    .id-card .inst-title {
+      font-family: 'Bebas Neue';
+      font-size: 17px;
+      font-weight: normal;
+      text-transform: uppercase;
+      padding: 0 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      line-height: 1.2;
+    }
+
+    .id-card .inst-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 7px;
+      font-weight: 500;
+      color: #CBD5E1;
+      margin-top: 0px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .id-card .profile-area {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .id-card .photo-frame {
+      width: 90px;
+      height: 90px;
+      background: var(--white);
+      border-radius: 20px; 
+      position: relative;
+    }
+
+    .id-card .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: var(--gold-gradient);
+      border-radius: 22px;
+      z-index: -1;
+    }
+
+    .id-card .photo-frame img {
+      position: absolute;
+      top: 4px;
+      left: 3px;
+      width: calc(100% - 6px);
+      height: calc(100% - 6px);
+      object-fit: cover;
+      border-radius: 17px;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+
+    .id-card .badge-id {
+      margin-top: -12px;
+      background: var(--primary);
+      color: var(--white);
+      border: 1.5px solid var(--accent);
+      font-size: 6.5px;
+      font-weight: 800;
+      padding: 3px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      z-index: 3;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .id-card .person-info {
+      text-align: center;
+      margin-top: 8px;
+      padding: 0 10px;
+    }
+
+    .id-card .name-en {
+      font-size: 14px; 
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+
+    .id-card .name-bn {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-top: 1px;
+    }
+
+    .id-card .designation {
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 2px;
+      background: var(--primary);
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .id-card .details-table {
+      width: 85%;
+      margin: 8px auto 0;
+      display: grid;
+      grid-template-columns: 68px 10px 1fr;
+      row-gap: 3.5px;
+      font-size: 9px;
+      text-align: left;
+    }
+
+    .id-card .d-lbl { font-weight: 700; color: var(--text-light); text-transform: uppercase; }
+    .id-card .d-col { font-weight: 700; color: var(--text-main); text-align: center;}
+    .id-card .d-val { font-weight: 800; color: var(--text-main); }
+    .id-card .d-val.blood { 
+      color: var(--danger); 
+      font-weight: 900; 
+      font-size: 9px; 
+    }
+
+    .id-card .bottom-barcode {
+      position: absolute;
+      bottom: 8px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .id-card .barcode-font {
+      font-family: 'Libre Barcode 128', cursive;
+      font-size: 27px;
+      line-height: 0.8;
+      letter-spacing: 2px;
+      color: var(--primary);
+      opacity: 0.9;
+    }
+
+    .id-card .card-footer-color {
+      position: absolute;
+      bottom: 0; left: 0; width: 100%; height: 11px;
+      border-top: 2px solid var(--accent);
+      background: var(--primary);
+    }
+
+    /* BACK SIDE DESIGN */
+    .id-card .back-header {
+      background: var(--primary);
+      padding: 10px 10px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .id-card .back-header h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: normal;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .id-card .back-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 35px);
+      text-align: left;
+    }
+
+    .id-card .address-box {
+      background: var(--bg-color);
+      border: 1px solid #E2E8F0;
+      border-left: 3px solid var(--primary);
+      border-radius: 4px;
+      padding: 8px;
+      margin-bottom: 7px;
+    }
+
+    .id-card .s-title {
+      font-size: 8px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+
+    .id-card .s-text {
+      font-size: 7px;
+      color: var(--text-main);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .id-card .mid-section {
+      display: flex;
+      justify-content:left;
+      gap:15px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .id-card .qr-holder {
+      width: 55px;
+      height: 55px;
+      background: var(--white);
+      padding: 3px;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      flex: 0 0 auto;
+    }
+
+    .id-card .qr-holder img { width: 100%; height: 100%; display: block; }
+
+    .id-card .issue-info { text-align: left; }
+    .id-card .i-lbl { font-size: 5.5px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+    .id-card .i-val { font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 4px; line-height: 1.1;}
+    .id-card .status-badge {
+      background: #059669; color: var(--white); font-size: 5.5px; padding: 3px 8px; 
+      border-radius: 5px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; display: inline-block;
+    }
+
+    .id-card .terms-box { margin-bottom: auto; }
+    .id-card .terms-box ul { padding-left: 12px; margin: 0; }
+    .id-card .terms-box li { font-size: 6.5px; color: var(--text-light); font-weight: 500; margin-bottom: 3px; line-height: 1.3;}
+
+    .id-card .emergency-strip {
+      background: #FFF1F2;
+      border: 1px dashed #FECDD3;
+      border-radius: 6px;
+      text-align: center;
+      padding: 8px;
+      margin-top: 0px;
+      margin-bottom: 25px;
+    }
+    .id-card .em-lbl { font-size: 6.5px; color: var(--danger); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+    .id-card .em-num { font-size: 12px; font-weight: 900; color: #BE123C; margin-top: 2px; line-height: 1.1;}
+
+    .id-card .return-footer {
+      position: absolute;
+      bottom: 0; left: 0; width: 100%;
+      background: var(--primary);
+      color: #CBD5E1;
+      font-size: 10px;
+      font-family:'Bebas Neue';
+      text-align: center;
+      padding: 8px 0;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+
+    /* =========================================
+       DASHBOARD & PRINT CSS
+       ========================================= */
+    body {
+      background-color: #f3f4f6;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .loader {
+      border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6;
+      border-radius: 50%; width: 40px; height: 40px;
+      animation: spin 1s linear infinite; margin: auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    /* Print Specifications */
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .no-print { display: none !important; }
+      #printArea { display: block !important; }
+      
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+      
+      .print-page {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 15px;
+        width: 100%;
+        height: 100%;
+        page-break-after: always;
+        align-content: center;
+        justify-items: center;
+      }
+      
+      .card-pair {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .id-card {
+        box-shadow: none !important;
+        border: 0.5px dashed #94A3B8; 
+      }
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+<div id="app" class="min-h-screen flex flex-col">
+  
+  <!-- 1. Login View -->
+  <div id="loginView" class="no-print flex-1 flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 font-bold border-2 border-blue-100">আ</div>
+        <h2 class="text-2xl font-bold text-gray-900">Admin Portal</h2>
+        <p class="text-sm text-gray-500 mt-1">Abdur Razzak Dakhil Madrasah</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Admin Secret Code</label>
+          <input type="password" id="adminSecretInput" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" placeholder="Enter secret code...">
+        </div>
+        <button onclick="app.login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-blue-200">Access Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Dashboard View -->
+  <div id="dashboardView" class="no-print hidden flex-1 flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-40">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-xl shadow-md">আ</div>
+        <div>
+          <h1 class="font-bold text-gray-900 text-lg leading-tight">ARDM Admin</h1>
+          <p class="text-xs text-gray-500">Teacher Registration System</p>
+        </div>
+      </div>
+      <button onclick="app.logout()" class="text-sm font-medium text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">Logout</button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+      
+      <!-- List Section -->
+      <div id="listSection" class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
+          <h2 class="text-xl font-bold text-gray-800">Registered Teachers</h2>
+          <div class="flex gap-3">
+            <button onclick="app.fetchTeachers()" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">Refresh</button>
+            <button onclick="app.printBulk()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm shadow-emerald-200 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+              Print Selected
+            </button>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
+                <th class="p-4 w-12 text-center">
+                  <input type="checkbox" id="selectAll" onclick="app.toggleSelectAll(this)" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+                </th>
+                <th class="p-4 font-semibold">Teacher</th>
+                <th class="p-4 font-semibold">ID / Designation</th>
+                <th class="p-4 font-semibold">Mobile</th>
+                <th class="p-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherTableBody" class="divide-y divide-gray-100">
+              <!-- Rows will be injected here -->
+            </tbody>
+          </table>
+          <div id="tableLoading" class="p-12 text-center hidden">
+            <div class="loader"></div>
+            <p class="text-gray-500 mt-4 text-sm">Loading teachers...</p>
+          </div>
+          <div id="tableEmpty" class="p-12 text-center hidden">
+            <p class="text-gray-500">No teachers found.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  
+  <!-- 3. Profile Modal -->
+  <div id="profileModal" class="no-print fixed inset-0 bg-gray-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 opacity-0 transition-opacity">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform scale-95 transition-transform" id="profileModalContent">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-gray-50">
+        <h3 class="text-xl font-bold text-gray-900">Teacher Profile</h3>
+        <button onclick="app.closeProfile()" class="text-gray-400 hover:text-gray-600 hover:bg-gray-200 p-2 rounded-full transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto flex-1 bg-gray-50/30">
+        <div id="profileContent" class="hidden">
+          <!-- Two column layout for profile view -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Left col: Photo & Actions -->
+            <div class="col-span-1 flex flex-col items-center space-y-4">
+              <div class="w-48 h-48 rounded-2xl bg-gray-200 border-4 border-white shadow-lg overflow-hidden relative group">
+                <img id="profPhoto" src="" alt="Photo" class="w-full h-full object-cover">
+              </div>
+              <div class="w-full space-y-2 mt-4">
+                <button onclick="app.printSingle()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition-colors shadow-sm flex justify-center items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                  Print ID Card
+                </button>
+                <button onclick="app.showEditForm()" class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium py-2.5 rounded-xl transition-colors border border-blue-200">Edit Details</button>
+                <button onclick="app.deleteCurrent()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-medium py-2.5 rounded-xl transition-colors border border-red-200">Delete Teacher</button>
+              </div>
+            </div>
+            
+            <!-- Right col: Details -->
+            <div class="col-span-1 md:col-span-2 space-y-6">
+              <div>
+                <h4 class="text-2xl font-bold text-gray-900" id="profNameEn"></h4>
+                <p class="text-lg text-gray-600 font-medium mt-1" id="profNameBn" style="font-family: 'Noto Sans Bengali', sans-serif;"></p>
+                <span class="inline-block mt-3 bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-blue-200" id="profDesig"></span>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-6 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">Teacher ID</p>
+                  <p class="font-mono font-bold text-gray-900" id="profTid"></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">Mobile</p>
+                  <p class="font-medium text-gray-900" id="profMobile"></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">Blood Group</p>
+                  <p class="font-bold text-red-600" id="profBlood"></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">NID</p>
+                  <p class="font-medium text-gray-900" id="profNid"></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">Date of Birth</p>
+                  <p class="font-medium text-gray-900" id="profDob"></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">Joining Date</p>
+                  <p class="font-medium text-gray-900" id="profJoin"></p>
+                </div>
+              </div>
+              
+              <div class="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <p class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">Address & Emergency</p>
+                <div class="space-y-3">
+                  <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <p class="text-sm text-gray-700 leading-relaxed" id="profAddr"></p>
+                  </div>
+                  <div class="flex items-center gap-3 bg-red-50 p-3 rounded-lg border border-red-100">
+                    <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                    <div>
+                      <p class="text-[10px] text-red-600 font-bold uppercase tracking-wide">Emergency Contact</p>
+                      <p class="text-sm font-bold text-red-800" id="profEmerg"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Form -->
+        <form id="editForm" class="hidden space-y-6" onsubmit="event.preventDefault(); app.submitEdit();">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Name (En)</label><input type="text" id="ef_nameEn" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Name (Bn)</label><input type="text" id="ef_nameBn" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Designation</label><input type="text" id="ef_desig" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Blood Group</label>
+              <select id="ef_blood" class="w-full px-3 py-2 border rounded-lg">
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              </select>
+            </div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">NID</label><input type="text" id="ef_nid" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Mobile</label><input type="text" id="ef_mobile" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">DOB</label><input type="date" id="ef_dob" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Joining Date</label><input type="date" id="ef_join" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">House</label><input type="text" id="ef_house" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Village</label><input type="text" id="ef_village" class="w-full px-3 py-2 border rounded-lg" required></div>
+            <div><label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Emergency Contact</label><input type="text" id="ef_emerg" class="w-full px-3 py-2 border rounded-lg" required></div>
+          </div>
+          <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <button type="button" onclick="app.cancelEdit()" class="px-5 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium">Cancel</button>
+            <button type="submit" class="px-5 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium">Save Changes</button>
+          </div>
+        </form>
+
+        <div id="modalLoading" class="p-12 text-center hidden">
+          <div class="loader"></div>
+          <p class="text-gray-500 mt-4 text-sm">Processing...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="no-print fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-[100]"></div>
+
+</div>
+
+<!-- 4. Print Area (Hidden on screen, shown on print) -->
+<div id="printArea" class="hidden">
+  <!-- Dynamic pages will be injected here -->
+</div>
+
+<script>
+const CONFIG = {
+  GAS_URL: "https://script.google.com/macros/s/AKfycbxO1addlBNx1Cv9MUMbYEP7UBIx4tDWPS7ABBdjcmAlQsJ0YxnEvKGnuzXAwSvtRPB7/exec"
+};
+
+const app = {
+  state: {
+    adminSecret: '',
+    teachers: [],
+    selectedUid: null
+  },
+
+  init() {
+    const saved = sessionStorage.getItem('adminSecret');
+    if (saved) {
+      this.state.adminSecret = saved;
+      this.showView('dashboardView');
+      this.fetchTeachers();
+    }
+  },
+
+  showView(id) {
+    document.getElementById('loginView').classList.add('hidden');
+    document.getElementById('dashboardView').classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+  },
+
+  toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `no-print fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl transition-opacity duration-300 z-[100] opacity-100 ${type === 'error' ? 'bg-red-600' : 'bg-gray-900'}`;
+    setTimeout(() => el.classList.replace('opacity-100', 'opacity-0'), 3000);
+  },
+
+  async api(payload) {
+    payload.adminSecret = this.state.adminSecret;
+    try {
+      const res = await fetch(CONFIG.GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || data.error);
+      return data;
+    } catch (err) {
+      this.toast(err.message, 'error');
+      if (err.message === "UNAUTHORIZED_ADMIN_ONLY") this.logout();
+      throw err;
+    }
+  },
+
+  async login() {
+    const secret = document.getElementById('adminSecretInput').value.trim();
+    if (!secret) return this.toast("Enter secret code", 'error');
+    this.state.adminSecret = secret;
+    try {
+      const btn = document.querySelector('#loginView button');
+      btn.textContent = "Verifying..."; btn.disabled = true;
+      await this.fetchTeachers();
+      sessionStorage.setItem('adminSecret', secret);
+      this.showView('dashboardView');
+    } catch(e) {
+      // toast already handled
+    } finally {
+      const btn = document.querySelector('#loginView button');
+      btn.textContent = "Access Dashboard"; btn.disabled = false;
+    }
+  },
+
+  logout() {
+    sessionStorage.removeItem('adminSecret');
+    this.state.adminSecret = '';
+    this.state.teachers = [];
+    document.getElementById('adminSecretInput').value = '';
+    this.showView('loginView');
+  },
+
+  async fetchTeachers() {
+    document.getElementById('tableLoading').classList.remove('hidden');
+    document.getElementById('teacherTableBody').innerHTML = '';
+    document.getElementById('tableEmpty').classList.add('hidden');
+    try {
+      const res = await this.api({ action: 'list' });
+      this.state.teachers = res.teachers.reverse(); // Newest first
+      this.renderTable();
+    } finally {
+      document.getElementById('tableLoading').classList.add('hidden');
+    }
+  },
+
+  renderTable() {
+    const tbody = document.getElementById('teacherTableBody');
+    if (this.state.teachers.length === 0) {
+      document.getElementById('tableEmpty').classList.remove('hidden');
+      return;
+    }
+    
+    tbody.innerHTML = this.state.teachers.map(t => `
+      <tr class="hover:bg-blue-50/50 transition-colors group cursor-pointer" onclick="app.openProfile('${t.uid}', event)">
+        <td class="p-4 border-b border-gray-100 text-center" onclick="event.stopPropagation()">
+          <input type="checkbox" value="${t.uid}" class="row-cb rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4">
+        </td>
+        <td class="p-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <img src="${t.photoUrl || 'https://placehold.co/100x100/e2e8f0/64748b?text=No+Photo'}" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+            <div>
+              <p class="font-bold text-gray-900">${t.nameEn}</p>
+              <p class="text-xs text-gray-500" style="font-family: 'Noto Sans Bengali', sans-serif;">${t.nameBn}</p>
+            </div>
+          </div>
+        </td>
+        <td class="p-4 border-b border-gray-100">
+          <p class="font-mono text-sm font-semibold text-blue-700">${t.teacherId}</p>
+          <p class="text-xs text-gray-500 bg-gray-100 inline-block px-2 py-0.5 rounded mt-1">${t.designation}</p>
+        </td>
+        <td class="p-4 border-b border-gray-100 text-sm text-gray-600">${t.mobile}</td>
+        <td class="p-4 border-b border-gray-100 text-right">
+          <button class="text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 bg-blue-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">View Profile</button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  toggleSelectAll(el) {
+    document.querySelectorAll('.row-cb').forEach(cb => cb.checked = el.checked);
+  },
+
+  openProfile(uid, e) {
+    if(e && e.target.type === 'checkbox') return;
+    this.state.selectedUid = uid;
+    const t = this.state.teachers.find(x => x.uid === uid);
+    if (!t) return;
+
+    // Populate view
+    document.getElementById('profPhoto').src = t.photoUrl || 'https://placehold.co/400x400/e2e8f0/64748b?text=No+Photo';
+    document.getElementById('profNameEn').textContent = t.nameEn;
+    document.getElementById('profNameBn').textContent = t.nameBn;
+    document.getElementById('profDesig').textContent = t.designation;
+    document.getElementById('profTid').textContent = t.teacherId;
+    document.getElementById('profMobile').textContent = t.mobile;
+    document.getElementById('profBlood').textContent = t.bloodGroup;
+    document.getElementById('profNid').textContent = t.nid;
+    document.getElementById('profDob').textContent = this.formatDate(t.dob);
+    document.getElementById('profJoin').textContent = this.formatDate(t.joiningDate);
+    document.getElementById('profAddr').innerHTML = `House: ${t.house}<br>Vill: ${t.village}<br>Post: ${t.postOffice} - ${t.postCode}<br>${t.upazilla}, ${t.district}`;
+    document.getElementById('profEmerg').textContent = t.emergencyContact;
+
+    // Setup modal states
+    document.getElementById('profileContent').classList.remove('hidden');
+    document.getElementById('editForm').classList.add('hidden');
+    document.getElementById('modalLoading').classList.add('hidden');
+
+    // Show modal
+    const modal = document.getElementById('profileModal');
+    const content = document.getElementById('profileModalContent');
+    modal.classList.remove('hidden');
+    // slight delay for animation
+    setTimeout(() => {
+      modal.classList.replace('opacity-0', 'opacity-100');
+      content.classList.replace('scale-95', 'scale-100');
+    }, 10);
+  },
+
+  closeProfile() {
+    const modal = document.getElementById('profileModal');
+    const content = document.getElementById('profileModalContent');
+    modal.classList.replace('opacity-100', 'opacity-0');
+    content.classList.replace('scale-100', 'scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+  },
+
+  showEditForm() {
+    const t = this.state.teachers.find(x => x.uid === this.state.selectedUid);
+    ['nameEn','nameBn','nid','dob','joiningDate','mobile','bloodGroup','house','village','emergencyContact'].forEach(k => {
+      let el = document.getElementById('ef_' + (k==='bloodGroup'?'blood': k==='joiningDate'?'join' : k==='emergencyContact'?'emerg' : k));
+      if(el) el.value = t[k];
+    });
+    document.getElementById('ef_desig').value = t.designation; // Custom mapping if needed
+    
+    document.getElementById('profileContent').classList.add('hidden');
+    document.getElementById('editForm').classList.remove('hidden');
+  },
+
+  cancelEdit() {
+    document.getElementById('editForm').classList.add('hidden');
+    document.getElementById('profileContent').classList.remove('hidden');
+  },
+
+  async submitEdit() {
+    const payload = {
+      action: 'update',
+      uid: this.state.selectedUid,
+      nameEn: document.getElementById('ef_nameEn').value,
+      nameBn: document.getElementById('ef_nameBn').value,
+      designation: document.getElementById('ef_desig').value,
+      bloodGroup: document.getElementById('ef_blood').value,
+      nid: document.getElementById('ef_nid').value,
+      dob: document.getElementById('ef_dob').value,
+      joiningDate: document.getElementById('ef_join').value,
+      mobile: document.getElementById('ef_mobile').value,
+      house: document.getElementById('ef_house').value,
+      village: document.getElementById('ef_village').value,
+      emergencyContact: document.getElementById('ef_emerg').value
+    };
+
+    document.getElementById('editForm').classList.add('hidden');
+    document.getElementById('modalLoading').classList.remove('hidden');
+
+    try {
+      await this.api(payload);
+      this.toast("Updated successfully");
+      await this.fetchTeachers(); // reload list
+      this.openProfile(this.state.selectedUid); // re-open profile with new data
+    } catch(e) {
+      document.getElementById('modalLoading').classList.add('hidden');
+      document.getElementById('editForm').classList.remove('hidden');
+    }
+  },
+
+  async deleteCurrent() {
+    if(!confirm("Are you sure you want to permanently delete this teacher?")) return;
+    
+    document.getElementById('profileContent').classList.add('hidden');
+    document.getElementById('modalLoading').classList.remove('hidden');
+
+    try {
+      await this.api({ action: 'delete', uid: this.state.selectedUid });
+      this.toast("Teacher deleted");
+      this.closeProfile();
+      this.fetchTeachers();
+    } catch(e) {
+      document.getElementById('modalLoading').classList.add('hidden');
+      document.getElementById('profileContent').classList.remove('hidden');
+    }
+  },
+
+  formatDate(dStr) {
+    if(!dStr) return "";
+    try {
+      // User requested format: "30 JUlY 2003"
+      const d = new Date(dStr);
+      const day = d.getDate();
+      const month = d.toLocaleString('en-US', { month: 'long' }).toUpperCase();
+      const year = d.getFullYear();
+      return `${day} ${month} ${year}`;
+    } catch(e) { return dStr; }
+  },
+
+  generateCardHTML(t) {
+    const photo = t.photoUrl || 'https://placehold.co/400x400/ffffff/64748b?text=No+Photo';
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t.teacherId}`;
+    const dobFormat = this.formatDate(t.dob);
+    const joinFormat = this.formatDate(t.joiningDate);
+    
+    return `
+      <div class="card-pair">
+        <!-- FRONT -->
+        <div class="id-card">
+          <div class="header-bg"></div>
+          <div class="header-content">
+            <div class="inst-title">Abdur Razzak Dakhil Madrasah</div>
+            <div class="inst-sub">Sarafbhata, Rangunia, Chattogram</div>
+          </div>
+          <div class="profile-area">
+            <div class="photo-frame">
+              <img src="${photo}" alt="Teacher Photo">
+            </div>
+          </div>
+          <div class="person-info">
+            <div class="name-en">${t.nameEn}</div>
+            <div class="name-bn">${t.nameBn}</div>
+            <div class="designation">${t.designation}</div>
+          </div>
+          <div class="details-table">
+            <div class="d-lbl">Teacher ID</div><div class="d-col">:</div><div class="d-val">${t.teacherId}</div>
+            <div class="d-lbl">Mobile</div><div class="d-col">:</div><div class="d-val">${t.mobile}</div>
+            <div class="d-lbl">Blood Group</div><div class="d-col">:</div><div class="d-val blood">${t.bloodGroup} (Positive)</div>
+            <div class="d-lbl">Date Of Birth</div><div class="d-col">:</div><div class="d-val">${dobFormat}</div>
+          </div>
+          <div class="bottom-barcode">
+            <div class="barcode-font">${t.teacherId}</div>
+          </div>
+          <div class="card-footer-color"></div>
+        </div>
+
+        <!-- BACK -->
+        <div class="id-card">
+          <div class="back-header">
+            <h3>Abdur Razzak Dakhil Madrasah</h3>
+          </div>
+          <div class="back-body">
+            <div class="address-box">
+              <div class="s-title">Permanent Address</div>
+              <div class="s-text">
+                House: ${t.house}, <br>Vill: ${t.village}, Post: ${t.postOffice}, <br> Upazila: ${t.upazilla}, District: ${t.district}.
+              </div>
+            </div>
+            <div class="mid-section">
+              <div class="qr-holder">
+                <img src="${qrUrl}" alt="QR Code">
+              </div>
+              <div class="issue-info">
+                <div class="i-lbl">Date Of Join</div>
+                <div class="i-val">${joinFormat}</div>
+                <div class="status-badge">Active Staff</div>
+              </div>
+            </div>
+            <div class="terms-box">
+              <div class="s-title" style="border-bottom: 1px solid #E2E8F0; padding-bottom: 3px; margin-bottom: 4px;">Terms & Conditions</div>
+              <ul>
+                <li>This card is property of the institution.</li>
+                <li>Must be worn visibly during duty hours.</li>
+                <li>If lost, inform the authority immediately.</li>
+              </ul>
+            </div>
+            <div class="emergency-strip">
+              <div class="em-lbl">Emergency Contact Number</div>
+              <div class="em-num">${t.emergencyContact}</div>
+            </div>
+          </div>
+          <div class="return-footer">
+            If found, please return to the madrasah office.
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  executePrint(teachersToPrint) {
+    if (teachersToPrint.length === 0) return this.toast("No teachers selected for printing", 'error');
+    
+    const printArea = document.getElementById('printArea');
+    printArea.innerHTML = ''; // clear old
+
+    // Group into chunks of 4 (4 teachers = 4 front+back pairs per A4 Landscape page)
+    const chunkSize = 4;
+    for (let i = 0; i < teachersToPrint.length; i += chunkSize) {
+      const chunk = teachersToPrint.slice(i, i + chunkSize);
+      const pageDiv = document.createElement('div');
+      pageDiv.className = 'print-page id-card-container';
+      pageDiv.innerHTML = chunk.map(t => this.generateCardHTML(t)).join('');
+      printArea.appendChild(pageDiv);
+    }
+
+    // Trigger print dialog
+    setTimeout(() => {
+      window.print();
+    }, 500); // slight delay to allow images/fonts to prep
+  },
+
+  printSingle() {
+    const t = this.state.teachers.find(x => x.uid === this.state.selectedUid);
+    if(t) this.executePrint([t]);
+  },
+
+  printBulk() {
+    const cbs = document.querySelectorAll('.row-cb:checked');
+    const uids = Array.from(cbs).map(cb => cb.value);
+    const toPrint = this.state.teachers.filter(t => uids.includes(t.uid));
+    this.executePrint(toPrint);
+  }
+};
+
+// Initialize
+app.init();
+</script>
+</body>
+</html>
