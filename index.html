@@ -32,12 +32,16 @@
       --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
     }
 
+    /* 
+       We wrap the user's ID card in a specific container 
+       so the CSS doesn't break the Tailwind Dashboard 
+    */
     .id-card-container {
       font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      gap: 40px; /* User's original gap */
       flex-wrap: wrap;
     }
 
@@ -131,7 +135,7 @@
     .id-card .photo-frame::before {
       content: '';
       position: absolute;
-      inset: -2px;
+      inset: -1.5px; 
       background: var(--gold-gradient);
       border-radius: 22px;
       z-index: -1;
@@ -352,9 +356,8 @@
       text-transform: uppercase;
     }
 
-
     /* =========================================
-       DASHBOARD & PRINT CSS
+       DASHBOARD CSS
        ========================================= */
     body {
       background-color: #f3f4f6;
@@ -367,72 +370,14 @@
       animation: spin 1s linear infinite; margin: auto;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    /* Print Specifications */
-    @media print {
-      body {
-        background: none;
-        padding: 0;
-        margin: 0;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .no-print { display: none !important; }
-      #printArea { display: block !important; }
-      
-      @page {
-        size: A4 landscape;
-        margin: 10mm;
-      }
-      
-      .print-page {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 15px;
-        width: 100%;
-        height: 100%;
-        page-break-after: always;
-        align-content: center;
-        justify-items: center;
-      }
-      
-      .card-pair {
-        display: flex;
-        gap: 10px;
-      }
-      
-      .id-card {
-        box-shadow: none !important;
-        border: 0.5px dashed #94A3B8; 
-      }
-    }
   </style>
 </head>
 <body class="text-gray-800">
 
 <div id="app" class="min-h-screen flex flex-col">
-  
-  <!-- 1. Login View -->
-  <div id="loginView" class="no-print flex-1 flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100">
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 font-bold border-2 border-blue-100">আ</div>
-        <h2 class="text-2xl font-bold text-gray-900">Admin Portal</h2>
-        <p class="text-sm text-gray-500 mt-1">Abdur Razzak Dakhil Madrasah</p>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Admin Secret Code</label>
-          <input type="password" id="adminSecretInput" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none" placeholder="Enter secret code...">
-        </div>
-        <button onclick="app.login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-blue-200">Access Dashboard</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- 2. Dashboard View -->
-  <div id="dashboardView" class="no-print hidden flex-1 flex flex-col">
+  <!-- Dashboard View (No Login Required) -->
+  <div id="dashboardView" class="flex-1 flex flex-col">
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-40">
       <div class="flex items-center gap-3">
@@ -442,7 +387,6 @@
           <p class="text-xs text-gray-500">Teacher Registration System</p>
         </div>
       </div>
-      <button onclick="app.logout()" class="text-sm font-medium text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">Logout</button>
     </nav>
 
     <!-- Main Content -->
@@ -492,8 +436,8 @@
   </div>
 
   
-  <!-- 3. Profile Modal -->
-  <div id="profileModal" class="no-print fixed inset-0 bg-gray-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 opacity-0 transition-opacity">
+  <!-- Profile Modal -->
+  <div id="profileModal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 opacity-0 transition-opacity">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transform scale-95 transition-transform" id="profileModalContent">
       <!-- Modal Header -->
       <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-gray-50">
@@ -615,51 +559,37 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="no-print fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-[100]"></div>
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 z-[100]"></div>
 
-</div>
-
-<!-- 4. Print Area (Hidden on screen, shown on print) -->
-<div id="printArea" class="hidden">
-  <!-- Dynamic pages will be injected here -->
 </div>
 
 <script>
 const CONFIG = {
-  GAS_URL: "https://script.google.com/macros/s/AKfycbxO1addlBNx1Cv9MUMbYEP7UBIx4tDWPS7ABBdjcmAlQsJ0YxnEvKGnuzXAwSvtRPB7/exec"
+  // Use your real URL here
+  GAS_URL: "https://script.google.com/macros/s/AKfycbxO1addlBNx1Cv9MUMbYEP7UBIx4tDWPS7ABBdjcmAlQsJ0YxnEvKGnuzXAwSvtRPB7/exec",
+  ADMIN_SECRET: "ARDM_DELETE_2026"
 };
 
 const app = {
   state: {
-    adminSecret: '',
     teachers: [],
     selectedUid: null
   },
 
   init() {
-    const saved = sessionStorage.getItem('adminSecret');
-    if (saved) {
-      this.state.adminSecret = saved;
-      this.showView('dashboardView');
-      this.fetchTeachers();
-    }
-  },
-
-  showView(id) {
-    document.getElementById('loginView').classList.add('hidden');
-    document.getElementById('dashboardView').classList.add('hidden');
-    document.getElementById(id).classList.remove('hidden');
+    this.fetchTeachers();
   },
 
   toast(msg, type = 'success') {
     const el = document.getElementById('toast');
     el.textContent = msg;
-    el.className = `no-print fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl transition-opacity duration-300 z-[100] opacity-100 ${type === 'error' ? 'bg-red-600' : 'bg-gray-900'}`;
+    el.className = `fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-medium shadow-xl transition-opacity duration-300 z-[100] opacity-100 ${type === 'error' ? 'bg-red-600' : 'bg-gray-900'}`;
     setTimeout(() => el.classList.replace('opacity-100', 'opacity-0'), 3000);
   },
 
   async api(payload) {
-    payload.adminSecret = this.state.adminSecret;
+    // Automatically attach admin secret for all requests
+    payload.adminSecret = CONFIG.ADMIN_SECRET;
     try {
       const res = await fetch(CONFIG.GAS_URL, {
         method: "POST",
@@ -671,35 +601,8 @@ const app = {
       return data;
     } catch (err) {
       this.toast(err.message, 'error');
-      if (err.message === "UNAUTHORIZED_ADMIN_ONLY") this.logout();
       throw err;
     }
-  },
-
-  async login() {
-    const secret = document.getElementById('adminSecretInput').value.trim();
-    if (!secret) return this.toast("Enter secret code", 'error');
-    this.state.adminSecret = secret;
-    try {
-      const btn = document.querySelector('#loginView button');
-      btn.textContent = "Verifying..."; btn.disabled = true;
-      await this.fetchTeachers();
-      sessionStorage.setItem('adminSecret', secret);
-      this.showView('dashboardView');
-    } catch(e) {
-      // toast already handled
-    } finally {
-      const btn = document.querySelector('#loginView button');
-      btn.textContent = "Access Dashboard"; btn.disabled = false;
-    }
-  },
-
-  logout() {
-    sessionStorage.removeItem('adminSecret');
-    this.state.adminSecret = '';
-    this.state.teachers = [];
-    document.getElementById('adminSecretInput').value = '';
-    this.showView('loginView');
   },
 
   async fetchTeachers() {
@@ -758,7 +661,6 @@ const app = {
     const t = this.state.teachers.find(x => x.uid === uid);
     if (!t) return;
 
-    // Populate view
     document.getElementById('profPhoto').src = t.photoUrl || 'https://placehold.co/400x400/e2e8f0/64748b?text=No+Photo';
     document.getElementById('profNameEn').textContent = t.nameEn;
     document.getElementById('profNameBn').textContent = t.nameBn;
@@ -772,16 +674,13 @@ const app = {
     document.getElementById('profAddr').innerHTML = `House: ${t.house}<br>Vill: ${t.village}<br>Post: ${t.postOffice} - ${t.postCode}<br>${t.upazilla}, ${t.district}`;
     document.getElementById('profEmerg').textContent = t.emergencyContact;
 
-    // Setup modal states
     document.getElementById('profileContent').classList.remove('hidden');
     document.getElementById('editForm').classList.add('hidden');
     document.getElementById('modalLoading').classList.add('hidden');
 
-    // Show modal
     const modal = document.getElementById('profileModal');
     const content = document.getElementById('profileModalContent');
     modal.classList.remove('hidden');
-    // slight delay for animation
     setTimeout(() => {
       modal.classList.replace('opacity-0', 'opacity-100');
       content.classList.replace('scale-95', 'scale-100');
@@ -802,7 +701,7 @@ const app = {
       let el = document.getElementById('ef_' + (k==='bloodGroup'?'blood': k==='joiningDate'?'join' : k==='emergencyContact'?'emerg' : k));
       if(el) el.value = t[k];
     });
-    document.getElementById('ef_desig').value = t.designation; // Custom mapping if needed
+    document.getElementById('ef_desig').value = t.designation;
     
     document.getElementById('profileContent').classList.add('hidden');
     document.getElementById('editForm').classList.remove('hidden');
@@ -836,8 +735,8 @@ const app = {
     try {
       await this.api(payload);
       this.toast("Updated successfully");
-      await this.fetchTeachers(); // reload list
-      this.openProfile(this.state.selectedUid); // re-open profile with new data
+      await this.fetchTeachers(); 
+      this.openProfile(this.state.selectedUid); 
     } catch(e) {
       document.getElementById('modalLoading').classList.add('hidden');
       document.getElementById('editForm').classList.remove('hidden');
@@ -864,7 +763,6 @@ const app = {
   formatDate(dStr) {
     if(!dStr) return "";
     try {
-      // User requested format: "30 JUlY 2003"
       const d = new Date(dStr);
       const day = d.getDate();
       const month = d.toLocaleString('en-US', { month: 'long' }).toUpperCase();
@@ -873,14 +771,402 @@ const app = {
     } catch(e) { return dStr; }
   },
 
-  generateCardHTML(t) {
-    const photo = t.photoUrl || 'https://placehold.co/400x400/ffffff/64748b?text=No+Photo';
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t.teacherId}`;
-    const dobFormat = this.formatDate(t.dob);
-    const joinFormat = this.formatDate(t.joiningDate);
+  openPrintPage(teachersToPrint) {
+    if (teachersToPrint.length === 0) return this.toast("No teachers selected for printing", 'error');
     
-    return `
-      <div class="card-pair">
+    // We store the data in session storage to pass it to the print window
+    sessionStorage.setItem('printData', JSON.stringify(teachersToPrint));
+
+    // Open a new window with the print layout
+    const printWindow = window.open('', '_blank');
+    
+    // Generate the HTML for the print window
+    let htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>ARDM - Print ID Cards</title>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Bengali:wght@500;600;700&display=swap');
+        
+        :root {
+          --primary: #0B192C;       
+          --secondary: #1A365D;     
+          --accent: #D4AF37;        
+          --accent-light: #FBECA1;  
+          --text-main: #0F172A;     
+          --text-light: #64748B;    
+          --bg-color: #F8FAFC;      
+          --white: #FFFFFF;
+          --danger: #E11D48;
+          --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+        }
+
+        * {
+          box-sizing: border-box;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          margin: 0;
+          padding: 0;
+        }
+
+        body {
+          font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+          background: #D1D5DB;
+        }
+
+        /* Container for the cards on screen */
+        #print-container {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 40px;
+          padding: 50px;
+          min-height: 100vh;
+          flex-wrap: wrap;
+        }
+
+        .id-card {
+          width: 2.125in;
+          height: 3.375in;
+          background: var(--white);
+          position: relative;
+          border-radius: 10px;
+          overflow: hidden;
+          border: 1px solid #E2E8F0;
+          z-index: 1;
+        }
+
+        .id-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(var(--secondary) 0.5px, transparent 0.5px);
+          background-size: 12px 12px;
+          opacity: 0.04;
+          z-index: -2;
+        }
+
+        .header-bg {
+          position: absolute;
+          top: 0; left: 0; width: 100%;
+          height: 125px;
+          background: linear-gradient(145deg, var(--primary) 0%, var(--secondary) 100%);
+          clip-path: polygon(0 0, 100% 0, 100% 78%, 0% 100%);
+          z-index: 0;
+        }
+
+        .header-bg::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; width: 100%; height: 4px;
+          background: var(--gold-gradient);
+        }
+
+        .header-content {
+          position: relative;
+          z-index: 1;
+          text-align: center;
+          padding-top: 15px;
+          color: var(--white);
+        }
+
+        .inst-title {
+          font-family: 'Bebas Neue';
+          font-size: 17px;
+          font-weight: normal;
+          text-transform: uppercase;
+          padding: 0 10px;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .inst-sub {
+          font-family: 'Poppins', sans-serif;
+          font-size: 7px;
+          font-weight: 500;
+          color: #CBD5E1;
+          margin-top: 0px;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+        }
+
+        .profile-area {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 10px;
+        }
+
+        .photo-frame {
+          width: 90px;
+          height: 90px;
+          background: var(--white);
+          border-radius: 20px; 
+          position: relative;
+        }
+
+        .photo-frame::before {
+          content: '';
+          position: absolute;
+          inset: -1.5px;
+          background: var(--gold-gradient);
+          border-radius: 22px;
+          z-index: -1;
+        }
+
+        .photo-frame img {
+          position: absolute;
+          top: 4px;
+          left: 3px;
+          width: calc(100% - 6px);
+          height: calc(100% - 6px);
+          object-fit: cover;
+          border-radius: 17px;
+          display: block;
+          margin: 0;
+          padding: 0;
+        }
+
+        .person-info {
+          text-align: center;
+          margin-top: 8px;
+          padding: 0 10px;
+        }
+
+        .name-en {
+          font-size: 14px; 
+          font-weight: 800;
+          color: var(--primary);
+          text-transform: uppercase;
+          letter-spacing: -0.2px;
+          line-height: 1.1;
+        }
+
+        .name-bn {
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--text-light);
+          margin-top: 1px;
+        }
+
+        .designation {
+          font-size: 7px;
+          font-weight: 700;
+          color: var(--accent);
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          margin-top: 2px;
+          background: var(--primary);
+          display: inline-block;
+          padding: 3px 10px;
+          border-radius: 4px;
+        }
+
+        .details-table {
+          width: 85%;
+          margin: 8px auto 0;
+          display: grid;
+          grid-template-columns: 68px 10px 1fr;
+          row-gap: 3.5px;
+          font-size: 9px;
+        }
+
+        .d-lbl { font-weight: 700; color: var(--text-light); text-transform: uppercase; }
+        .d-col { font-weight: 700; color: var(--text-main); text-align: center;}
+        .d-val { font-weight: 800; color: var(--text-main); }
+        .d-val.blood { color: var(--danger); font-weight: 900; font-size: 9px; }
+
+        .bottom-barcode {
+          position: absolute;
+          bottom: 8px;
+          width: 100%;
+          text-align: center;
+        }
+
+        .barcode-font {
+          font-family: 'Libre Barcode 128', cursive;
+          font-size: 27px;
+          line-height: 0.8;
+          letter-spacing: 2px;
+          color: var(--primary);
+          opacity: 0.9;
+        }
+
+        .card-footer-color {
+          position: absolute;
+          bottom: 0; left: 0; width: 100%; height: 11px;
+          border-top: 2px solid var(--accent);
+          background: var(--primary);
+        }
+
+        /* BACK SIDE DESIGN */
+        .back-header {
+          background: var(--primary);
+          padding: 10px 10px;
+          text-align: center;
+          border-bottom: 2px solid var(--accent);
+        }
+
+        .back-header h3 {
+          font-family: 'Bebas Neue', sans-serif;
+          color: var(--white);
+          font-size: 14px;
+          font-weight: normal;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .back-body {
+          padding: 12px 14px;
+          display: flex;
+          flex-direction: column;
+          height: calc(100% - 35px);
+        }
+
+        .address-box {
+          background: var(--bg-color);
+          border: 1px solid #E2E8F0;
+          border-left: 3px solid var(--primary);
+          border-radius: 4px;
+          padding: 8px;
+          margin-bottom: 7px;
+        }
+
+        .s-title {
+          font-size: 8px;
+          font-weight: 800;
+          color: var(--primary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 3px;
+        }
+
+        .s-text {
+          font-size: 7px;
+          color: var(--text-main);
+          font-weight: 600;
+          line-height: 1.4;
+        }
+
+        .mid-section {
+          display: flex;
+          justify-content:left;
+          gap:15px;
+          align-items: center;
+          margin-bottom: 10px;
+        }
+
+        .qr-holder {
+          width: 55px;
+          height: 55px;
+          background: var(--white);
+          padding: 3px;
+          border: 1px solid #CBD5E1;
+          border-radius: 6px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .qr-holder img { width: 100%; height: 100%; display: block; }
+
+        .issue-info { text-align: left; }
+        .i-lbl { font-size: 5.5px; color: var(--text-light); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+        .i-val { font-size: 10px; font-weight: 800; color: var(--primary); margin-bottom: 4px;}
+        .status-badge {
+          background: #059669; color: var(--white); font-size: 5.5px; padding: 3px 8px; 
+          border-radius: 5px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;
+        }
+
+        .terms-box { margin-bottom: auto; }
+        .terms-box ul { padding-left: 12px; margin: 0; }
+        .terms-box li { font-size: 6.5px; color: var(--text-light); font-weight: 500; margin-bottom: 3px; line-height: 1.3;}
+
+        .emergency-strip {
+          background: #FFF1F2;
+          border: 1px dashed #FECDD3;
+          border-radius: 6px;
+          text-align: center;
+          padding: 8px;
+          margin-top: 0px;
+          margin-bottom: 25px;
+        }
+        .em-lbl { font-size: 6.5px; color: var(--danger); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;}
+        .em-num { font-size: 12px; font-weight: 900; color: #BE123C; margin-top: 2px;}
+
+        .return-footer {
+          position: absolute;
+          bottom: 0; left: 0; width: 100%;
+          background: var(--primary);
+          color: #CBD5E1;
+          font-size: 10px;
+          font-family:'Bebas Neue';
+          text-align: center;
+          padding: 8px 0;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+        }
+
+        /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
+        @media print {
+          body {
+            background: none;
+            padding: 0;
+            margin: 0;
+            display: block;
+          }
+          #print-container {
+            padding: 0;
+            gap: 15px; /* Adjust gap for print */
+          }
+          .id-card {
+            margin: 5px; 
+            float: left;
+            page-break-inside: avoid;
+            box-shadow: none;
+            border: 0.5px dashed #94A3B8; 
+          }
+          @page {
+            size: A4 landscape;
+            margin: 0.5in;
+          }
+        }
+        
+        .loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+        
+        <div id="loading" class="loading-screen">
+            <h2 style="color: #0B192C;">Preparing ID Cards for Print...</h2>
+            <p style="color: #64748B;">Please wait while fonts and images load.</p>
+        </div>
+
+        <div id="print-container">
+    `;
+
+    teachersToPrint.forEach(t => {
+      const photo = t.photoUrl || 'https://placehold.co/400x400/ffffff/64748b?text=No+Photo';
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ardm.netlify.app/teacher/${t.teacherId}`;
+      const dobFormat = this.formatDate(t.dob);
+      const joinFormat = this.formatDate(t.joiningDate);
+      
+      htmlContent += `
         <!-- FRONT -->
         <div class="id-card">
           <div class="header-bg"></div>
@@ -949,42 +1235,38 @@ const app = {
             If found, please return to the madrasah office.
           </div>
         </div>
-      </div>
+      `;
+    });
+
+    htmlContent += `
+        </div>
+        <script>
+            // Wait 1000ms after load to ensure fonts & images are ready, then print
+            window.onload = function() {
+                setTimeout(function() {
+                    document.getElementById('loading').style.display = 'none';
+                    window.print();
+                }, 1000);
+            }
+        <\/script>
+    </body>
+    </html>
     `;
-  },
 
-  executePrint(teachersToPrint) {
-    if (teachersToPrint.length === 0) return this.toast("No teachers selected for printing", 'error');
-    
-    const printArea = document.getElementById('printArea');
-    printArea.innerHTML = ''; // clear old
-
-    // Group into chunks of 4 (4 teachers = 4 front+back pairs per A4 Landscape page)
-    const chunkSize = 4;
-    for (let i = 0; i < teachersToPrint.length; i += chunkSize) {
-      const chunk = teachersToPrint.slice(i, i + chunkSize);
-      const pageDiv = document.createElement('div');
-      pageDiv.className = 'print-page id-card-container';
-      pageDiv.innerHTML = chunk.map(t => this.generateCardHTML(t)).join('');
-      printArea.appendChild(pageDiv);
-    }
-
-    // Trigger print dialog
-    setTimeout(() => {
-      window.print();
-    }, 500); // slight delay to allow images/fonts to prep
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
   },
 
   printSingle() {
     const t = this.state.teachers.find(x => x.uid === this.state.selectedUid);
-    if(t) this.executePrint([t]);
+    if(t) this.openPrintPage([t]);
   },
 
   printBulk() {
     const cbs = document.querySelectorAll('.row-cb:checked');
     const uids = Array.from(cbs).map(cb => cb.value);
     const toPrint = this.state.teachers.filter(t => uids.includes(t.uid));
-    this.executePrint(toPrint);
+    this.openPrintPage(toPrint);
   }
 };
 
