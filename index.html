@@ -1126,7 +1126,9 @@ const app = {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-content: space-between;
+  align-content: flex-start;
+  row-gap: 12px;   /* এখানেই একমাত্র জায়গা থেকে গ্যাপ নিয়ন্ত্রণ হবে */
+  column-gap: 0;   /* pair এর ভেতরের gap আলাদাভাবে .id-pair এ থাকবে */
 }
 
 .id-pair {
@@ -1134,7 +1136,8 @@ const app = {
   gap: 8px; /* front-back কাছাকাছি রাখার জন্য ছোট গ্যাপ */
 }
           .id-card {
-            margin: 5px; 
+            margin:  0px 5px; 
+            
             float: left;
             page-break-inside: avoid;
             box-shadow: none;
