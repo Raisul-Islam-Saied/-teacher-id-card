@@ -904,11 +904,14 @@ const app = {
         }
 
         .photo-frame {
-          width: 90px;
-          height: 90px;
-          background: var(--white);
-          border-radius: 20px; 
-          position: relative;
+          position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+border-radius: 20px;
+
         }
 
         .photo-frame::before {
