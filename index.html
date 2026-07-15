@@ -1169,79 +1169,85 @@ const app = {
       const dobFormat = this.formatDate(t.dob);
       const joinFormat = this.formatDate(t.joiningDate);
       
-      htmlContent += `
-        <!-- FRONT -->
-        <div class="id-card">
-          <div class="header-bg"></div>
-          <div class="header-content">
-            <div class="inst-title">Abdur Razzak Dakhil Madrasah</div>
-            <div class="inst-sub">Sarafbhata, Rangunia, Chattogram</div>
-          </div>
-          <div class="profile-area">
-            <div class="photo-frame">
-              <img src="${photo}" alt="Teacher Photo">
+            htmlContent += `
+        <!-- এই ডিভটি ফ্রন্ট ও ব্যাক কার্ডকে একসাথে জোড়া লাগিয়ে রাখবে -->
+        <div style="display: flex; gap: 0; page-break-inside: avoid;">
+        
+          <!-- FRONT -->
+          <div class="id-card">
+            <div class="header-bg"></div>
+            <div class="header-content">
+              <div class="inst-title">Abdur Razzak Dakhil Madrasah</div>
+              <div class="inst-sub">Sarafbhata, Rangunia, Chattogram</div>
             </div>
+            <div class="profile-area">
+              <div class="photo-frame">
+                <img src="${photo}" alt="Teacher Photo">
+              </div>
+            </div>
+            <div class="person-info">
+              <div class="name-en">${t.nameEn}</div>
+              <div class="name-bn">${t.nameBn}</div>
+              <div class="designation">${t.designation}</div>
+            </div>
+            <div class="details-table">
+              <div class="d-lbl">Teacher ID</div><div class="d-col">:</div><div class="d-val">${t.teacherId}</div>
+              <div class="d-lbl">Mobile</div><div class="d-col">:</div><div class="d-val">0${t.mobile}</div>
+              <div class="d-lbl">Blood Group</div><div class="d-col">:</div><div class="d-val blood">${t.bloodGroup} (Positive)</div>
+              <div class="d-lbl">Date Of Birth</div><div class="d-col">:</div><div class="d-val">${dobFormat}</div>
+            </div>
+            <div class="bottom-barcode">
+              <div class="barcode-font">${t.teacherId}</div>
+            </div>
+            <div class="card-footer-color"></div>
           </div>
-          <div class="person-info">
-            <div class="name-en">${t.nameEn}</div>
-            <div class="name-bn">${t.nameBn}</div>
-            <div class="designation">${t.designation}</div>
-          </div>
-          <div class="details-table">
-            <div class="d-lbl">Teacher ID</div><div class="d-col">:</div><div class="d-val">${t.teacherId}</div>
-            <div class="d-lbl">Mobile</div><div class="d-col">:</div><div class="d-val">0${t.mobile}</div>
-            <div class="d-lbl">Blood Group</div><div class="d-col">:</div><div class="d-val blood">${t.bloodGroup} (Positive)</div>
-            <div class="d-lbl">Date Of Birth</div><div class="d-col">:</div><div class="d-val">${dobFormat}</div>
-          </div>
-          <div class="bottom-barcode">
-            <div class="barcode-font">${t.teacherId}</div>
-          </div>
-          <div class="card-footer-color"></div>
-        </div>
 
-        <!-- BACK -->
-        <div class="id-card">
-          <div class="back-header">
-            <h3>Abdur Razzak Dakhil Madrasah</h3>
-          </div>
-          <div class="back-body">
-                        <div class="address-box">
-              <div class="s-title">Permanent Address</div>
-              <div class="s-text">
-                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">House: ${t.house},</div>
-                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;"> Vill: ${t.village}, Post: ${t.postOffice} - ${t.postCode}, </div>
-                Upazila: ${t.upazilla}, District: ${t.district}.
-              </div>
+          <!-- BACK -->
+          <div class="id-card">
+            <div class="back-header">
+              <h3>Abdur Razzak Dakhil Madrasah</h3>
             </div>
+            <div class="back-body">
+              <div class="address-box">
+                <div class="s-title">Permanent Address</div>
+                <div class="s-text">
+                  <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">House: ${t.house},</div>
+                  <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;"> Vill: ${t.village}, Post: ${t.postOffice} - ${t.postCode}, </div>
+                  Upazila: ${t.upazilla}, District: ${t.district}.
+                </div>
+              </div>
 
-            <div class="mid-section">
-              <div class="qr-holder">
-                <img src="${qrUrl}" alt="QR Code">
+              <div class="mid-section">
+                <div class="qr-holder">
+                  <img src="${qrUrl}" alt="QR Code">
+                </div>
+                <div class="issue-info">
+                  <div class="i-lbl">Date Of Join</div>
+                  <div class="i-val">${joinFormat}</div>
+                  <div class="status-badge">Active Staff</div>
+                </div>
               </div>
-              <div class="issue-info">
-                <div class="i-lbl">Date Of Join</div>
-                <div class="i-val">${joinFormat}</div>
-                <div class="status-badge">Active Staff</div>
+              <div class="terms-box">
+                <div class="s-title" style="border-bottom: 1px solid #E2E8F0; padding-bottom: 3px; margin-bottom: 4px;">Terms & Conditions</div>
+                <ul>
+                  <li>This card is property of the institution.</li>
+                  <li>Must be worn visibly during duty hours.</li>
+                  <li>If lost, inform the authority immediately.</li>
+                </ul>
+              </div>
+              <div class="emergency-strip">
+                <div class="em-lbl">Emergency Contact Number</div>
+                <div class="em-num">0${t.emergencyContact}</div>
               </div>
             </div>
-            <div class="terms-box">
-              <div class="s-title" style="border-bottom: 1px solid #E2E8F0; padding-bottom: 3px; margin-bottom: 4px;">Terms & Conditions</div>
-              <ul>
-                <li>This card is property of the institution.</li>
-                <li>Must be worn visibly during duty hours.</li>
-                <li>If lost, inform the authority immediately.</li>
-              </ul>
-            </div>
-            <div class="emergency-strip">
-              <div class="em-lbl">Emergency Contact Number</div>
-              <div class="em-num">0${t.emergencyContact}</div>
+            <div class="return-footer">
+              If found, please return to the madrasah office.
             </div>
           </div>
-          <div class="return-footer">
-            If found, please return to the madrasah office.
-          </div>
+          
         </div>
       `;
+
     });
 
     htmlContent += `
