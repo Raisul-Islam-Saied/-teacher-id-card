@@ -1115,20 +1115,24 @@ const app = {
 
         /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
                 /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
+                /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
         @media print {
           body {
             background: none;
             padding: 0;
             margin: 0;
-            display: block;
           }
           #print-container {
-            padding: 0;
-            display: flex;
-            justify-content: space-between;
-            gap: 0;
+            padding: 0 !important;
+            display: grid !important;
+            /* এক লাইনে ঠিক ৪টা কার্ড বসবে, কার্ডের সাইজ ফিক্সড */
+            grid-template-columns: repeat(4, 2.125in) !important;
+            justify-content: space-between !important;
+            row-gap: 20px !important; /* উপর-নিচের কার্ডের দূরত্ব */
           }
           .id-card {
+            margin: 0 !important;
+            float: none !important;
             page-break-inside: avoid;
             box-shadow: none;
             border: 0.5px dashed #94A3B8; 
