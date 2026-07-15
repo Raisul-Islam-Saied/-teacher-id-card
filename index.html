@@ -1122,14 +1122,16 @@ const app = {
             display: block;
           }
           #print-container {
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: flex-start;
-  row-gap: 30px;   /* এখানেই একমাত্র জায়গা থেকে গ্যাপ নিয়ন্ত্রণ হবে */
-  column-gap: 0;   /* pair এর ভেতরের gap আলাদাভাবে .id-pair এ থাকবে */
-}
+    padding: 0;
+    min-height: auto;        /* এইটা বাদ দিলেই মূল বাগ ঠিক হবে */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    gap: 0;                  /* base rule এর gap:40px override করার জন্য */
+    row-gap: 25px;           /* এখন এইটা শুধু row এর মধ্যে গ্যাপ দিবে, extra push করবে না */
+    column-gap: 0;
+  }
 
 .id-pair {
   display: flex;
