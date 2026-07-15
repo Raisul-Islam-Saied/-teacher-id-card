@@ -1113,29 +1113,31 @@ const app = {
           text-transform: uppercase;
         }
 
-                   /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
+                           /* PRINT SPECIFICATIONS - A4 Landscape */
         @media print {
           body {
             background: none;
             padding: 0;
             margin: 0;
+            display: block;
           }
           #print-container {
             padding: 0 !important;
             display: flex !important;
-            justify-content: space-between !important;
             flex-wrap: wrap !important;
+            justify-content: space-between !important; /* দুই জোড়া কার্ডের মাঝে গ্যাপ */
           }
           .id-card {
             margin: 0 !important;
-            box-shadow: none;
-            border: 0.5px dashed #94A3B8; 
+            box-shadow: none !important;
+            border: 0.5px dashed #94A3B8 !important; 
           }
           @page {
             size: A4 landscape;
-            margin: 0.5in;
+            margin: 0.4in;
           }
         }
+
            
 
         
@@ -1168,13 +1170,12 @@ const app = {
       const dobFormat = this.formatDate(t.dob);
       const joinFormat = this.formatDate(t.joiningDate);
       
-                  htmlContent += `
-        <!-- এই ডিভটি ফ্রন্ট ও ব্যাক কার্ডকে একসাথে রাখবে, মাঝে ১০px গ্যাপ এবং নিচে ৪০px গ্যাপ সহ -->
-        <div style="display: flex; gap: 10px; margin-bottom: 40px; page-break-inside: avoid; width: 48%;">
+                        htmlContent += `
+        <!-- এই ডিভটি ফ্রন্ট ও ব্যাককে একসাথে জোড়া লাগিয়ে রাখবে -->
+        <div style="display: flex; gap: 15px; margin-bottom: 40px; width: 48%; page-break-inside: avoid; justify-content: center;">
         
           <!-- FRONT -->
           <div class="id-card">
-
             <div class="header-bg"></div>
             <div class="header-content">
               <div class="inst-title">Abdur Razzak Dakhil Madrasah</div>
@@ -1245,7 +1246,7 @@ const app = {
             </div>
           </div>
           
-        </div>
+        </div> <!-- Wrapper End -->
       `;
 
     });
