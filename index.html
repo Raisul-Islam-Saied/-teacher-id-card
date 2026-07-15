@@ -1202,12 +1202,14 @@ const app = {
             <h3>Abdur Razzak Dakhil Madrasah</h3>
           </div>
           <div class="back-body">
-            <div class="address-box">
+                        <div class="address-box">
               <div class="s-title">Permanent Address</div>
               <div class="s-text">
-                House: ${t.house}, <br>Vill: ${t.village}, Post: ${t.postOffice} - ${t.postCode}, <br> Upazila: ${t.upazilla}, District: ${t.district}.
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">House: ${t.house},</div>
+                Vill: ${t.village}, Post: ${t.postOffice} - ${t.postCode}, <br> Upazila: ${t.upazilla}, District: ${t.district}.
               </div>
             </div>
+
             <div class="mid-section">
               <div class="qr-holder">
                 <img src="${qrUrl}" alt="QR Code">
