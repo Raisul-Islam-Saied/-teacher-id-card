@@ -1113,7 +1113,7 @@ const app = {
           text-transform: uppercase;
         }
 
-                /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
+                   /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
         @media print {
           body {
             background: none;
@@ -1125,7 +1125,6 @@ const app = {
             display: flex !important;
             justify-content: space-between !important;
             flex-wrap: wrap !important;
-            gap: 20px 0 !important; /* উপর-নিচে ২০px গ্যাপ, ডানে-বামে space-between */
           }
           .id-card {
             margin: 0 !important;
@@ -1137,7 +1136,7 @@ const app = {
             margin: 0.5in;
           }
         }
-
+           
 
         
         .loading-screen {
@@ -1169,12 +1168,13 @@ const app = {
       const dobFormat = this.formatDate(t.dob);
       const joinFormat = this.formatDate(t.joiningDate);
       
-            htmlContent += `
-        <!-- এই ডিভটি ফ্রন্ট ও ব্যাক কার্ডকে একসাথে জোড়া লাগিয়ে রাখবে -->
-        <div style="display: flex; gap: 0; page-break-inside: avoid;">
+                  htmlContent += `
+        <!-- এই ডিভটি ফ্রন্ট ও ব্যাক কার্ডকে একসাথে রাখবে, মাঝে ১০px গ্যাপ এবং নিচে ৪০px গ্যাপ সহ -->
+        <div style="display: flex; gap: 10px; margin-bottom: 40px; page-break-inside: avoid; width: 48%;">
         
           <!-- FRONT -->
           <div class="id-card">
+
             <div class="header-bg"></div>
             <div class="header-content">
               <div class="inst-title">Abdur Razzak Dakhil Madrasah</div>
