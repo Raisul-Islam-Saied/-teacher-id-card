@@ -1114,6 +1114,7 @@ const app = {
         }
 
         /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
+                /* PRINT SPECIFICATIONS - A4 Landscape, 4 pairs per page */
         @media print {
           body {
             background: none;
@@ -1123,11 +1124,11 @@ const app = {
           }
           #print-container {
             padding: 0;
-            gap: 15px; /* Adjust gap for print */
+            display: flex;
+            justify-content: space-between;
+            gap: 0;
           }
           .id-card {
-            margin: 5px; 
-            float: left;
             page-break-inside: avoid;
             box-shadow: none;
             border: 0.5px dashed #94A3B8; 
@@ -1137,6 +1138,7 @@ const app = {
             margin: 0.5in;
           }
         }
+
         
         .loading-screen {
             position: fixed;
